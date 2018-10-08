@@ -2,7 +2,11 @@
 
 To run it via docker
 
-`docker run -d -p 9000:80 -p 8080:8080 -v /home/soli/workspace/lapis:/opt/openresty/nginx/conf --name lapis   solisoft/lapis server development`
+First build the docker image
+
+`$ docker build . -t solisoft/lapis`
+
+`$ docker run -d -p 9000:80 -p 8080:8080 -v /home/soli/workspace/lapis:/opt/openresty/nginx/conf --name lapis   solisoft/lapis server development`
 
 Then the app should run in development mode on port `8080`
 
