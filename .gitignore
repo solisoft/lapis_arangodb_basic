@@ -1,0 +1,4 @@
+*temp
+*.compiled
+logs/*.log
+logs/*.pid
