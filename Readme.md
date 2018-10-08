@@ -12,8 +12,10 @@ Then the app should run in development mode on port `8080`
 
 To run the `moonc` script :
 
-```$ docker exec -it lapis /bin/bash
-$ moonc -w *.moon```
+```
+$ docker exec -it lapis /bin/bash
+$ moonc -w *.moon
+```
 
 If you run it in production mode, restart the app with :
 
