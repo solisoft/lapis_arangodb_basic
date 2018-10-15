@@ -1,3 +1,4 @@
+-- nothing here ... just a controller sample
 lapis = require "lapis"
 http  = require "lapis.nginx.http"
 
@@ -7,28 +8,13 @@ import aql from require "lib.arango"
 class extends lapis.Application
 
   [cruds: "/crud/:type(/*)"]: =>
-    -- Run the AQL request
-    -- objects = aql("
-    --   FOR doc IN FILTER doc.type == @type RETURN doc
-    -- ", {
-    -- type: @params.type
-    --})
-    -- Return objects
     objects or= @params
     json: objects
 
   [crud: "/crud/:type/:key"]: respond_to {
     GET: =>
       -- Load an object
-      json: aql({
-        query: "
-          FOR doc IN objects
-          LIMIT 10
-          RETURN doc
-        ",
-        cache: true
-      })
-
+      json: { my: 'object' }
     PUT: =>
       -- Update an object
       json: { my: 'updated object' }
