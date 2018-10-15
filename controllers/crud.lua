@@ -1,24 +1,47 @@
 local lapis = require("lapis")
-local cached
-cached = require("lapis.cache").cached
-local auth_arangodb, aql
+local http = require("lapis.nginx.http")
+local respond_to, capture_errors
 do
-  local _obj_0 = require("lib.arango")
-  auth_arangodb, aql = _obj_0.auth_arangodb, _obj_0.aql
+  local _obj_0 = require("lapis.application")
+  respond_to, capture_errors = _obj_0.respond_to, _obj_0.capture_errors
 end
-local jwt = ""
+local aql
+aql = require("lib.arango").aql
 do
   local _class_0
   local _parent_0 = lapis.Application
   local _base_0 = {
-    ["/"] = cached({
-      exptime = 0.2,
-      function(self)
+    [{
+      cruds = "/crud/:type(/*)"
+    }] = function(self)
+      local objects = objects or self.params
+      return {
+        json = objects
+      }
+    end,
+    [{
+      crud = "/crud/:type/:key"
+    }] = respond_to({
+      GET = function(self)
         return {
           json = aql({
-            query = "\n          FOR doc IN objects\n          LIMIT 3\n          RETURN doc\n        ",
+            query = "\n          FOR doc IN objects\n          LIMIT 10\n          RETURN doc\n        ",
             cache = true
           })
+        }
+      end,
+      PUT = function(self)
+        return {
+          json = {
+            my = 'updated object'
+          }
+        }
+      end,
+      DELETE = function(self)
+        return {
+          json = {
+            success = true
+          }
         }
       end
     })
@@ -51,13 +74,6 @@ do
     end
   })
   _base_0.__class = _class_0
-  local self = _class_0
-  self:before_filter(function(self)
-    if jwt == "" then
-      jwt = auth_arangodb()
-    end
-  end)
-  self:include("controllers.crud")
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end

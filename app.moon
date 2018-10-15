@@ -1,12 +1,28 @@
 lapis = require "lapis"
-http = require "lapis.nginx.http"
 
-console = require "lapis.console"
+import cached from require "lapis.cache"
+import auth_arangodb, aql from require "lib.arango"
 
-import assert_valid from require "lapis.validate"
+jwt = ""
 
+-- App
 class extends lapis.Application
-  
-  "/console": console.make!
-  "/": =>
-    "Welcome to Lapis #{require "lapis.version"}"
+
+  @before_filter =>
+    if jwt == ""
+      jwt = auth_arangodb!
+
+  @include "controllers.crud"
+
+  "/": cached {
+    exptime: 0.2
+    =>
+      json: aql({
+        query: "
+          FOR doc IN objects
+          LIMIT 3
+          RETURN doc
+        ",
+        cache: true
+      })
+  }

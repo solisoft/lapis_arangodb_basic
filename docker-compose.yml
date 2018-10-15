@@ -1,0 +1,53 @@
+version: '3.1'
+
+services:
+  cms:
+    build: .
+    command: /bin/bash -c "cd /var/www && lapis server"
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - arangodb
+    links:
+      - arangodb:arangodb
+    networks:
+      frontend:
+
+  cms_prod:
+    build: .
+    command: /bin/bash -c "cd /var/www && lapis server production"
+    ports:
+      - 9090:80
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - arangodb
+    links:
+      - arangodb:arangodb
+    networks:
+      frontend:
+
+  arangodb:
+    image: arangodb/arangodb-preview:devel
+    environment:
+      ARANGO_ROOT_PASSWORD: password
+    networks:
+      frontend:
+        ipv4_address: 172.30.0.6
+    ports:
+      - 8530:8529
+    volumes:
+      - arangodb-data:/var/lib/arangodb3
+      - arangodb-app:/var/lib/arangodb3-app
+
+volumes:
+  arangodb-data:
+  arangodb-app:
+
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
