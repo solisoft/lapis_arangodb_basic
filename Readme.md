@@ -2,7 +2,7 @@
 
 `docker-compose up --build`
 
-For running only dev mode : `docker-compose up web --build`
+For running only dev mode : `docker-compose up --build web`
 
 It will launch the lapis instance + an arangoDB one
 
