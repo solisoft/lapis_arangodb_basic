@@ -5,6 +5,8 @@ import auth_arangodb, aql from require "lib.arango"
 
 jwt = ""
 
+splat_to_table = (splat) -> { k, v for k, v in splat\gmatch '/?(.-)/([^/]+)/?' }
+
 -- App
 class extends lapis.Application
 
