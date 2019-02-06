@@ -25,7 +25,7 @@ auth_arangodb = ()->
 aql = (stm)->
   -- create the cursor
   body, status_code, headers = http.simple {
-    url: config.url .. "_db/#{config.name}/_api/cursor",
+    url: config.db_url .. "_db/#{config.db_name}/_api/cursor",
     method: "POST",
     body: to_json(stm),
     headers: {
@@ -38,7 +38,7 @@ aql = (stm)->
   has_more = res["has_more"]
   while has_more
     body, status_code, headers = http.simple {
-      url: endpoint .. "_db/#{config.name}/_api/next/#{res["id"]}",
+      url: endpoint .. "_db/#{config.db_name}/_api/next/#{res["id"]}",
       method: "PUT",
       headers: {
         Authorization: "bearer #{jwt}"

@@ -24,7 +24,7 @@ end
 local aql
 aql = function(stm)
   local body, status_code, headers = http.simple({
-    url = config.url .. "_db/" .. tostring(config.name) .. "/_api/cursor",
+    url = config.db_url .. "_db/" .. tostring(config.db_name) .. "/_api/cursor",
     method = "POST",
     body = to_json(stm),
     headers = {
@@ -36,7 +36,7 @@ aql = function(stm)
   local has_more = res["has_more"]
   while has_more do
     body, status_code, headers = http.simple({
-      url = endpoint .. "_db/" .. tostring(config.name) .. "/_api/next/" .. tostring(res["id"]),
+      url = endpoint .. "_db/" .. tostring(config.db_name) .. "/_api/next/" .. tostring(res["id"]),
       method = "PUT",
       headers = {
         Authorization = "bearer " .. tostring(jwt)
