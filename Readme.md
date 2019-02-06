@@ -14,6 +14,14 @@ Create a `cms` database with an `objects` collection
 * To access Lapis app (prod) : `http://localhost:9090`
 
 
+## To compile any modification
+
+Go into the docker instance :
+`docker-compose run web bash` then run `moonc  **/*.moon` to compile `.moon` files.
+
+Watch the folder for any file modification :
+`moonc -w **/*.moon`
+
 # Links
 
 * [ArangoDB](https://arangodb.com)

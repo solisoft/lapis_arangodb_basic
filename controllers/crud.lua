@@ -24,10 +24,9 @@ do
     }] = respond_to({
       GET = function(self)
         return {
-          json = aql({
-            query = "\n          FOR doc IN objects\n          LIMIT 10\n          RETURN doc\n        ",
-            cache = true
-          })
+          json = {
+            my = 'object'
+          }
         }
       end,
       PUT = function(self)
