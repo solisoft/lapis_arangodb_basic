@@ -4,18 +4,16 @@ config = require("lapis.config").get!
 import from_json, to_json from require "lapis.util"
 
 jwt = ""
-db_config = {}
 
 -- auth_arangodb
-auth_arangodb = (sub_domain)->
-  db_config = require("lapis.config").get("db_#{sub_domain}")
+auth_arangodb = ()->
 
   body, status_code, headers = http.simple {
-    url: db_config.url .. "_open/auth",
+    url: config.db_url .. "_open/auth",
     method: "POST",
     body: to_json({
-      username: db_config.login,
-      password: db_config.pass
+      username: config.db_login,
+      password: config.db_pass
     })
   }
   if status_code == 200
@@ -27,7 +25,7 @@ auth_arangodb = (sub_domain)->
 aql = (stm)->
   -- create the cursor
   body, status_code, headers = http.simple {
-    url: db_config.url .. "_db/#{db_config.name}/_api/cursor",
+    url: config.url .. "_db/#{config.name}/_api/cursor",
     method: "POST",
     body: to_json(stm),
     headers: {
@@ -40,7 +38,7 @@ aql = (stm)->
   has_more = res["has_more"]
   while has_more
     body, status_code, headers = http.simple {
-      url: endpoint .. "_db/#{db_config.name}/_api/next/#{res["id"]}",
+      url: endpoint .. "_db/#{config.name}/_api/next/#{res["id"]}",
       method: "PUT",
       headers: {
         Authorization: "bearer #{jwt}"
@@ -55,7 +53,7 @@ aql = (stm)->
 -- With Params
 with_params = (method, handle, params)->
   body, status_code, headers = http.simple {
-    url: db_config.url .. "_db/#{db_config.name}/_api/document/" .. handle,
+    url: config.db_url .. "_db/#{config.db_name}/_api/document/" .. handle,
     method: method,
     body: to_json(params),
     headers: {
@@ -67,7 +65,7 @@ with_params = (method, handle, params)->
 -- Without Params
 without_params = (method, handle)->
   body, status_code, headers = http.simple {
-    url: db_config.url .. "_db/#{db_config.name}/_api/document/" .. handle,
+    url: config.db_url .. "_db/#{config.db_name}/_api/document/" .. handle,
     method: method,
     headers: {
       Authorization: "bearer #{jwt}"
@@ -94,7 +92,7 @@ document_delete = (handle)->
 -- Run a transaction
 transaction = (params)->
   body, status_code, headers = http.simple {
-    url: db_config.url .. "_db/#{db_config.name}/_api/transaction",
+    url: config.db_url .. "_db/#{config.db_name}/_api/transaction",
     method: method,
     body: to_json(params),
     headers: {

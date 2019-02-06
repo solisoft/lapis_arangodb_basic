@@ -6,7 +6,7 @@ For running only dev mode : `docker-compose up --build web`
 
 It will launch the lapis instance + an arangoDB one
 
-* To access ArangoDB UI : `http://localhost:8530`
+* To access ArangoDB UI : `http://localhost:8530` (root / password)
 
 Create a `cms` database with an `objects` collection
 
